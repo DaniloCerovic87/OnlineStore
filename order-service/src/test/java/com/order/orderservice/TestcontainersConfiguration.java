@@ -9,10 +9,10 @@ import org.testcontainers.utility.DockerImageName;
 @TestConfiguration(proxyBeanMethods = false)
 class TestcontainersConfiguration {
 
-	@Bean
-	@ServiceConnection
-	static MySQLContainer<?> mysqlContainer() {
-		return new MySQLContainer<>(DockerImageName.parse("mysql:8.3.0"));
-	}
+    @Bean
+    @ServiceConnection
+    static MySQLContainer<?> mysqlContainer() {
+        return new MySQLContainer<>(DockerImageName.parse("mysql:8.3.0"));
+    }
 
 }

@@ -20,7 +20,7 @@ public class OrderService {
     public void placeOrder(OrderRequest orderRequest) {
         var isProductInStock = inventoryClient.isInStock(orderRequest.skuCode(), orderRequest.quantity());
 
-        if(!isProductInStock) {
+        if (!isProductInStock) {
             throw new RuntimeException("Product with SkuCode " + orderRequest.skuCode() + " is not in stock");
         }
 

@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.containers.MySQLContainer;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Import(TestcontainersConfiguration.class)
 @ActiveProfiles("test")
@@ -46,7 +46,7 @@ class OrderServiceApplicationTests {
                   }
                 """;
 
-        InventoryClientStub.stubInventoryCallReturnTrue( "iphone_15", 1);
+        InventoryClientStub.stubInventoryCallReturnTrue("iphone_15", 1);
 
         var responseBodyString = RestAssured.given()
                 .contentType("application/json")
@@ -73,7 +73,7 @@ class OrderServiceApplicationTests {
                   }
                 """;
 
-        InventoryClientStub.stubInventoryCallReturnFalse( "iphone_15", 101);
+        InventoryClientStub.stubInventoryCallReturnFalse("iphone_15", 101);
 
         RestAssured.given()
                 .contentType("application/json")

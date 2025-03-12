@@ -41,14 +41,14 @@ resilience4j:
   circuit-breaker:
     instances:
       inventory:
-              register-health-indicator: true
-              sliding-window-type: COUNT_BASED
-              sliding-window-size: 10
-              failure-rate-threshold: 50
-              wait-duration-in-open-state: 5s
-              permitted-number-of-calls-in-half-open-state: 3
-              automatic-transition-from-open-to-half-open-enabled: true
-              minimum-number-of-calls: 5
+        register-health-indicator: true
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 5s
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+        minimum-number-of-calls: 5
   time-limiter:
     configs:
       default:

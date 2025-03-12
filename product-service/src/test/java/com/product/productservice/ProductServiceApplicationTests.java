@@ -14,42 +14,42 @@ import org.testcontainers.containers.MongoDBContainer;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ProductServiceApplicationTests {
 
-	@Autowired
-	private MongoDBContainer mongoDBContainer;
+    @Autowired
+    private MongoDBContainer mongoDBContainer;
 
-	@LocalServerPort
-	private int port;
+    @LocalServerPort
+    private int port;
 
-	@BeforeEach
-	void setup() {
-		RestAssured.baseURI = "http://localhost";
-		RestAssured.port = port;
-		if (!mongoDBContainer.isRunning()) {
-			mongoDBContainer.start();
-		}
-	}
+    @BeforeEach
+    void setup() {
+        RestAssured.baseURI = "http://localhost";
+        RestAssured.port = port;
+        if (!mongoDBContainer.isRunning()) {
+            mongoDBContainer.start();
+        }
+    }
 
-	@Test
-	void shouldCreateProduct() {
-		String requestBody = """
-									{
-									"name":"iPhone 16",
-									"description":"iPhone 16 is smartphone from Apple",
-									"price":1200
-									}
-				""";
+    @Test
+    void shouldCreateProduct() {
+        String requestBody = """
+                					{
+                					"name":"iPhone 16",
+                					"description":"iPhone 16 is smartphone from Apple",
+                					"price":1200
+                					}
+                """;
 
-		RestAssured.given()
-				.contentType("application/json")
-				.body(requestBody)
-				.when()
-				.post("/api/product")
-				.then()
-				.statusCode(201)
-				.body("id", Matchers.notNullValue())
-				.body("name", Matchers.equalTo("iPhone 16"))
-				.body("description", Matchers.equalTo("iPhone 16 is smartphone from Apple"))
-				.body("price", Matchers.equalTo(1200));
-	}
+        RestAssured.given()
+                .contentType("application/json")
+                .body(requestBody)
+                .when()
+                .post("/api/product")
+                .then()
+                .statusCode(201)
+                .body("id", Matchers.notNullValue())
+                .body("name", Matchers.equalTo("iPhone 16"))
+                .body("description", Matchers.equalTo("iPhone 16 is smartphone from Apple"))
+                .body("price", Matchers.equalTo(1200));
+    }
 
 }

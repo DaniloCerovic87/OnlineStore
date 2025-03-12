@@ -7,7 +7,7 @@ public class InventoryClientStub {
     public static void stubInventoryCallReturnTrue(String skuCode, Integer quantity) {
         stubFor(get(urlEqualTo("/api/inventory?skuCode=" + skuCode + "&quantity=" + quantity))
                 .willReturn(aResponse()
-                .withStatus(200)
+                        .withStatus(200)
                         .withHeader("Content-Type", "application/json")
                         .withBody("true")));
     }

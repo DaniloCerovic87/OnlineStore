@@ -14,41 +14,41 @@ import org.testcontainers.containers.MySQLContainer;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class InventoryServiceApplicationTests {
 
-	@Autowired
-	private MySQLContainer<?> mySQLContainer;
+    @Autowired
+    private MySQLContainer<?> mySQLContainer;
 
-	@LocalServerPort
-	private int port;
+    @LocalServerPort
+    private int port;
 
-	@BeforeEach
-	void setup() {
-		RestAssured.baseURI = "http://localhost";
-		RestAssured.port = port;
-		if(!mySQLContainer.isRunning()) {
-			mySQLContainer.start();
-		}
-	}
+    @BeforeEach
+    void setup() {
+        RestAssured.baseURI = "http://localhost";
+        RestAssured.port = port;
+        if (!mySQLContainer.isRunning()) {
+            mySQLContainer.start();
+        }
+    }
 
-	@Test
-	void shouldReadInventory() {
-		var response = RestAssured.given()
-				.when()
-				.get("/api/inventory?skuCode=iphone_15&quantity=1")
-				.then()
-				.log().all()
-				.statusCode(200)
-				.extract().response().as(Boolean.class);
-		Assertions.assertTrue(response);
+    @Test
+    void shouldReadInventory() {
+        var response = RestAssured.given()
+                .when()
+                .get("/api/inventory?skuCode=iphone_15&quantity=1")
+                .then()
+                .log().all()
+                .statusCode(200)
+                .extract().response().as(Boolean.class);
+        Assertions.assertTrue(response);
 
-		var negativeResponse = RestAssured.given()
-				.when()
-				.get("/api/inventory?skuCode=iphone_15&quantity=101")
-				.then()
-				.log().all()
-				.statusCode(200)
-				.extract().response().as(Boolean.class);
-		Assertions.assertFalse(negativeResponse);
+        var negativeResponse = RestAssured.given()
+                .when()
+                .get("/api/inventory?skuCode=iphone_15&quantity=101")
+                .then()
+                .log().all()
+                .statusCode(200)
+                .extract().response().as(Boolean.class);
+        Assertions.assertFalse(negativeResponse);
 
-	}
+    }
 
 }
