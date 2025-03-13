@@ -15,5 +15,4 @@ class TestcontainersConfiguration {
         return new MongoDBContainer(DockerImageName.parse("mongo:7.0.5"));
     }
 
-
 }

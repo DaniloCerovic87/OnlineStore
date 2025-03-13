@@ -25,7 +25,7 @@ public class ProductService {
                 .price(productRequest.price())
                 .build();
         productRepository.save(product);
-        log.info("Product created successfully");
+        log.info("Product created successfully: {}", product );
         return new ProductResponse(product.getId(), product.getName(), product.getDescription(), product.getPrice());
     }
 
