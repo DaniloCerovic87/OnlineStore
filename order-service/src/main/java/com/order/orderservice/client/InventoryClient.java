@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.service.annotation.GetExchange;
 
-
 @Slf4j
 public interface InventoryClient {
 
@@ -20,7 +19,7 @@ public interface InventoryClient {
     boolean isInStock(@RequestParam String skuCode, @RequestParam Integer quantity);
 
     default boolean fallbackMethod(String code, Integer quantity, Throwable throwable) {
-        log.info("Cannot get inventory for skucode {}, quantity {}, failure reason {}", code, quantity, throwable.getMessage());
+        log.info("Cannot get inventory for sku code {}, quantity {}, failure reason {}", code, quantity, throwable.getMessage());
         return false;
     }
 

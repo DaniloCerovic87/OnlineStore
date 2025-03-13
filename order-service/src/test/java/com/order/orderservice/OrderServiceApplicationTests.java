@@ -60,7 +60,6 @@ class OrderServiceApplicationTests {
                 .body().asString();
 
         assertEquals(responseBodyString, "Order Placed Successfully");
-
     }
 
     @Test
@@ -83,8 +82,6 @@ class OrderServiceApplicationTests {
                 .then()
                 .log().all()
                 .statusCode(500);
-
     }
-
 
 }
