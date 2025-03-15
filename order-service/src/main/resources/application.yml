@@ -21,7 +21,6 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
 
-
 #Actuator endpoints
 management:
   health:
@@ -34,7 +33,6 @@ management:
   endpoint:
     health:
       show-details: always
-
 
 #Resilience4j Properties
 resilience4j:

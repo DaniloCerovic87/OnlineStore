@@ -37,7 +37,6 @@ management:
     health:
       show-details: always
 
-
 #Resilience4j Properties
 resilience4j:
   circuit-breaker:
