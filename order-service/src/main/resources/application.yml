@@ -17,7 +17,11 @@ spring:
       default-topic: order-placed
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      properties:
+        schema:
+          registry:
+            url: http://127.0.0.1:8085
 
 inventory:
   url: http://localhost:8082
