@@ -9,6 +9,7 @@ build/
 **/mysql/
 **/volume-data/
 **/data/
+**/tempo-data/
 
 # Eclipse
 .apt_generated
