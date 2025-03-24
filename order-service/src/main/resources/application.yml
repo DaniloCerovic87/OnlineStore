@@ -40,10 +40,22 @@ management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: health, info, metrics, prometheus
   endpoint:
     health:
       show-details: always
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http:
+          server:
+            requests: true
+  observations:
+    key-values:
+      application: order-service
+  tracing:
+    sampling:
+      probability: 1.0
 
 #Resilience4j Properties
 resilience4j:

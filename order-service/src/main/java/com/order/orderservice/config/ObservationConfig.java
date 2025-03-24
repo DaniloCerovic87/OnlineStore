@@ -1,4 +1,4 @@
-package com.product.productservice.config;
+package com.order.orderservice.config;
 
 import io.micrometer.observation.ObservationRegistry;
 import io.micrometer.observation.aop.ObservedAspect;
