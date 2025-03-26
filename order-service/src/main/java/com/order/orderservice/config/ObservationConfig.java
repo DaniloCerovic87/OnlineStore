@@ -20,7 +20,7 @@ public class ObservationConfig {
     }
 
     @Bean
-    ObservedAspect observedAspect(ObservationRegistry registry) {
+    public ObservedAspect observedAspect(ObservationRegistry registry) {
         return new ObservedAspect(registry);
     }
 
