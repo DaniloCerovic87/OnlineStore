@@ -1,4 +1,4 @@
-package com.notification.service;
+package com.notificationservice;
 
 import com.order.orderservice.event.OrderPlacedEvent;
 import lombok.RequiredArgsConstructor;

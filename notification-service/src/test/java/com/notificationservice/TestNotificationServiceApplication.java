@@ -1,4 +1,4 @@
-package com.notification.service;
+package com.notificationservice;
 
 import org.springframework.boot.SpringApplication;
 
