@@ -1,4 +1,4 @@
-package com.inventoryservice.inventory_service.config;
+package com.inventoryservice.inventoryservice.config;
 
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;

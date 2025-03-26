@@ -1,4 +1,4 @@
-package com.inventoryservice.inventory_service.config;
+package com.inventoryservice.inventoryservice.config;
 
 import io.micrometer.observation.ObservationRegistry;
 import io.micrometer.observation.aop.ObservedAspect;

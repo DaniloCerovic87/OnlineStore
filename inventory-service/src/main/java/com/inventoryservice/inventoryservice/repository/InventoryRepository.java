@@ -1,6 +1,6 @@
-package com.inventoryservice.inventory_service.repository;
+package com.inventoryservice.inventoryservice.repository;
 
-import com.inventoryservice.inventory_service.model.Inventory;
+import com.inventoryservice.inventoryservice.model.Inventory;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface InventoryRepository extends JpaRepository<Inventory, Long> {

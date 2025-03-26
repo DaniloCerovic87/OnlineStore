@@ -1,4 +1,4 @@
-package com.inventoryservice.inventory_service.model;
+package com.inventoryservice.inventoryservice.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

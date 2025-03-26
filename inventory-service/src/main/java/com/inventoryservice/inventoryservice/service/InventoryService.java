@@ -1,6 +1,6 @@
-package com.inventoryservice.inventory_service.service;
+package com.inventoryservice.inventoryservice.service;
 
-import com.inventoryservice.inventory_service.repository.InventoryRepository;
+import com.inventoryservice.inventoryservice.repository.InventoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
