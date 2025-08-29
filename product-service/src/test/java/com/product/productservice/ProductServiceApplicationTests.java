@@ -46,6 +46,7 @@ class ProductServiceApplicationTests {
                 .post("/api/product")
                 .then()
                 .statusCode(201)
+                .header("Location", Matchers.containsString("/api/product/"))
                 .body("id", Matchers.notNullValue())
                 .body("name", Matchers.equalTo("iPhone 16"))
                 .body("description", Matchers.equalTo("iPhone 16 is smartphone from Apple"))
