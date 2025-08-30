@@ -1,8 +1,8 @@
 package com.product.productservice.service;
 
 
-import com.product.productservice.dto.ProductRequest;
-import com.product.productservice.dto.ProductResponse;
+import com.product.productservice.dto.CreateProductRequest;
+import com.product.productservice.dto.CreateProductResponse;
 import com.product.productservice.model.Product;
 import com.product.productservice.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,21 +18,21 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    public ProductResponse createProduct(ProductRequest productRequest) {
+    public CreateProductResponse createProduct(CreateProductRequest request) {
         Product product = Product.builder()
-                .name(productRequest.name())
-                .description(productRequest.description())
-                .price(productRequest.price())
+                .name(request.name())
+                .description(request.description())
+                .price(request.price())
                 .build();
         productRepository.save(product);
         log.info("Product created successfully: {}", product );
-        return new ProductResponse(product.getId(), product.getName(), product.getDescription(), product.getPrice());
+        return new CreateProductResponse(product.getId(), product.getName(), product.getDescription(), product.getPrice());
     }
 
-    public List<ProductResponse> getAllProducts() {
+    public List<CreateProductResponse> getAllProducts() {
         return productRepository.findAll()
                 .stream()
-                .map(p -> new ProductResponse(p.getId(), p.getName(), p.getDescription(), p.getPrice()))
+                .map(p -> new CreateProductResponse(p.getId(), p.getName(), p.getDescription(), p.getPrice()))
                 .toList();
     }
 

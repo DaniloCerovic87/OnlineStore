@@ -1,10 +1,9 @@
 package com.product.productservice.controller;
 
-import com.product.productservice.dto.ProductRequest;
-import com.product.productservice.dto.ProductResponse;
+import com.product.productservice.dto.CreateProductRequest;
+import com.product.productservice.dto.CreateProductResponse;
 import com.product.productservice.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -20,8 +19,8 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
-    public ResponseEntity<ProductResponse> createProduct(@RequestBody ProductRequest productRequest) {
-        ProductResponse createdProduct = productService.createProduct(productRequest);
+    public ResponseEntity<CreateProductResponse> createProduct(@RequestBody CreateProductRequest request) {
+        CreateProductResponse createdProduct = productService.createProduct(request);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
@@ -31,7 +30,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAllProducts() {
+    public ResponseEntity<List<CreateProductResponse>> getAllProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
