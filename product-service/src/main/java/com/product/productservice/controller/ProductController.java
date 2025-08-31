@@ -20,13 +20,13 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<CreateProductResponse> createProduct(@RequestBody CreateProductRequest request) {
-        CreateProductResponse createdProduct = productService.createProduct(request);
+        CreateProductResponse response = productService.createProduct(request);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(createdProduct.id())
+                .buildAndExpand(response.id())
                 .toUri();
-        return ResponseEntity.created(location).body(createdProduct);
+        return ResponseEntity.created(location).body(response);
     }
 
     @GetMapping
