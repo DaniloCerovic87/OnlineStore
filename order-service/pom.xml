@@ -24,6 +24,7 @@
         <loki-logback-appender.version>1.6.0</loki-logback-appender.version>
         <rest-assured.version>5.5.1</rest-assured.version>
         <spring-cloud-starter-contract-stub-runner.version>4.2.1</spring-cloud-starter-contract-stub-runner.version>
+        <kafka-schema-registry-client.version>7.6.0</kafka-schema-registry-client.version>
     </properties>
 
     <dependencies>
@@ -52,7 +53,7 @@
         <dependency>
             <groupId>io.confluent</groupId>
             <artifactId>kafka-schema-registry-client</artifactId>
-            <version>7.6.0</version>
+            <version>${kafka-schema-registry-client.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.avro</groupId>
