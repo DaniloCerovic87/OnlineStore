@@ -2,8 +2,8 @@ package com.order.orderservice.config;
 
 import com.order.orderservice.client.InventoryClient;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.ClientHttpRequestFactories;
-import org.springframework.boot.web.client.ClientHttpRequestFactorySettings;
+import org.springframework.boot.http.client.ClientHttpRequestFactoryBuilder;
+import org.springframework.boot.http.client.ClientHttpRequestFactorySettings;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestFactory;
@@ -20,22 +20,22 @@ public class RestClientConfig {
     private String inventoryServiceUrl;
 
     @Bean
-    public InventoryClient inventoryClient() {
-        RestClient restClient = RestClient.builder()
-                .baseUrl(inventoryServiceUrl)
-                .requestFactory(customRequestFactory())
-                .build();
+    public InventoryClient inventoryClient(ClientHttpRequestFactoryBuilder<ClientHttpRequestFactory> factoryBuilder) {
 
-        var restClientAdapter = RestClientAdapter.create(restClient);
-        var httpServiceProxyFactory = HttpServiceProxyFactory.builderFor(restClientAdapter).build();
-        return httpServiceProxyFactory.createClient(InventoryClient.class);
-    }
-
-    private ClientHttpRequestFactory customRequestFactory() {
-        ClientHttpRequestFactorySettings settings = ClientHttpRequestFactorySettings.DEFAULTS
+        ClientHttpRequestFactorySettings settings = ClientHttpRequestFactorySettings.defaults()
                 .withConnectTimeout(Duration.ofSeconds(3))
                 .withReadTimeout(Duration.ofSeconds(3));
-        return ClientHttpRequestFactories.get(settings);
+
+        ClientHttpRequestFactory requestFactory = factoryBuilder.build(settings);
+
+        RestClient restClient = RestClient.builder()
+                .baseUrl(inventoryServiceUrl)
+                .requestFactory(requestFactory)
+                .build();
+
+        var adapter = RestClientAdapter.create(restClient);
+        var proxyFactory = HttpServiceProxyFactory.builderFor(adapter).build();
+        return proxyFactory.createClient(InventoryClient.class);
     }
 
 }
