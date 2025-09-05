@@ -24,7 +24,6 @@ springdoc:
       name: Inventory Service
       url: /aggregate/inventory-service/v3/api-docs
 
-#Actuator endpoints
 management:
   health:
     circuit-breakers:
