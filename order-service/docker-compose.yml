@@ -2,13 +2,15 @@ services:
   mysql:
     image: mysql:8.3.0
     container_name: mysql
+    build:
+      context: ./docker/mysql
+      dockerfile: Dockerfile
     environment:
       MYSQL_ROOT_PASSWORD: mysql
     ports:
       - "3307:3306"
     volumes:
-      - ./mysql:/var/lib/mysql
-      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - order_mysql_data:/var/lib/mysql
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
@@ -61,3 +63,6 @@ services:
       KAFKA_CLUSTERS_BOOTSTRAPSERVERS: broker:29092
       KAFKA_CLUSTERS_SCHEMAREGISTRY: http://schema-registry:8081
       DYNAMIC_CONFIG_ENABLED: 'true'
+
+volumes:
+  order_mysql_data:
