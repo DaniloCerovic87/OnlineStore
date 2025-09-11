@@ -48,7 +48,7 @@ public class OrderService {
         kafkaTemplate.send("order-placed", orderPlacedEvent);
         log.info("End - Sending OrderPlacedEvent {} to Kafka topic order-placed", orderPlacedEvent);
 
-        return new CreateOrderResponse(order.getId(), order.getSkuCode(), order.getPrice(), order.getQuantity());
+        return new CreateOrderResponse(order.getId(), order.getOrderNumber(), order.getSkuCode(), order.getPrice(), order.getQuantity());
     }
 
 }
