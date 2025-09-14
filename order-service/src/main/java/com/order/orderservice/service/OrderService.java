@@ -4,6 +4,7 @@ import com.order.orderservice.client.InventoryClient;
 import com.order.orderservice.dto.CreateOrderRequest;
 import com.order.orderservice.dto.CreateOrderResponse;
 import com.order.orderservice.event.OrderPlacedEvent;
+import com.order.orderservice.exception.OutOfStockException;
 import com.order.orderservice.model.Order;
 import com.order.orderservice.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class OrderService {
         var isProductInStock = inventoryClient.isInStock(request.skuCode(), request.quantity());
 
         if (!isProductInStock) {
-            throw new RuntimeException("Product with SkuCode " + request.skuCode() + " is not in stock");
+            throw new OutOfStockException("Product with SkuCode " + request.skuCode() + " is not in stock");
         }
 
         Order order = new Order();

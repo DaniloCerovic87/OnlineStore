@@ -12,7 +12,6 @@ public class InventoryService {
 
     public boolean isInStock(String skuCode, Integer quantity) {
         return inventoryRepository.existsBySkuCodeAndQuantityIsGreaterThanEqual(skuCode, quantity);
-
     }
 
 }
