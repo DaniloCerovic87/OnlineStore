@@ -30,7 +30,7 @@ public class OrderService {
 
         if (!isProductInStock) {
             throw new OutOfStockException(
-                    "Product with SkuCode %s is not in stock (requested=%d)"
+                    "Product with SkuCode %s is not in stock (requested amount=%d)"
                             .formatted(request.skuCode(), request.quantity())
             );
         }
