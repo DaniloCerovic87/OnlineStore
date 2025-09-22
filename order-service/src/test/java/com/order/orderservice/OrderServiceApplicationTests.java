@@ -33,6 +33,7 @@ class OrderServiceApplicationTests {
     private int port;
 
     @MockitoBean
+    @SuppressWarnings("unused")
     private KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate;
 
     @BeforeEach
