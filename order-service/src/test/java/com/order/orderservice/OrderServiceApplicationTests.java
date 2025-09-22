@@ -103,7 +103,7 @@ class OrderServiceApplicationTests {
                 .post("/api/order")
                 .then()
                 .log().all()
-                .statusCode(500);
+                .statusCode(400);
     }
 
 }
