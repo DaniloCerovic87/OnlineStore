@@ -43,6 +43,7 @@ public class OrderService {
         orderRepository.save(order);
 
         // Send the message to Kafka Topic
+        // TODO implement Transactional Outbox pattern
         OrderPlacedEvent orderPlacedEvent = new OrderPlacedEvent();
         orderPlacedEvent.setOrderNumber(order.getOrderNumber());
         orderPlacedEvent.setEmail(request.userDetails().email());

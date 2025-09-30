@@ -30,7 +30,6 @@ public class RestExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleGeneralException(Exception ex) {
         log.error("Unexpected server error: {}", ex.getMessage(), ex);
-
         ApiError apiError = ApiError.builder()
                 .status(INTERNAL_SERVER_ERROR.value())
                 .message("General server exception - " + ex.getMessage())
