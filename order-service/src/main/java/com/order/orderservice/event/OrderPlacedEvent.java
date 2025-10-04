@@ -5,14 +5,21 @@
  */
 package com.order.orderservice.event;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.avro.specific.SpecificData;
 import org.apache.avro.util.Utf8;
 import org.apache.avro.message.BinaryMessageEncoder;
 import org.apache.avro.message.BinaryMessageDecoder;
 import org.apache.avro.message.SchemaStore;
 
+import java.io.Serial;
+
+@Setter
+@Getter
 @org.apache.avro.specific.AvroGenerated
 public class OrderPlacedEvent extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
+  @Serial
   private static final long serialVersionUID = -1830770410866646424L;
 
 
@@ -72,10 +79,54 @@ public class OrderPlacedEvent extends org.apache.avro.specific.SpecificRecordBas
     return DECODER.decode(b);
   }
 
-  private java.lang.CharSequence orderNumber;
-  private java.lang.CharSequence email;
-  private java.lang.CharSequence firstName;
-  private java.lang.CharSequence lastName;
+    /**
+     * -- GETTER --
+     *  Gets the value of the 'orderNumber' field.
+     *
+     *
+     * -- SETTER --
+     *  Sets the value of the 'orderNumber' field.
+     *
+     @return The value of the 'orderNumber' field.
+      * @param value the value to set.
+     */
+    private java.lang.CharSequence orderNumber;
+    /**
+     * -- GETTER --
+     *  Gets the value of the 'email' field.
+     *
+     *
+     * -- SETTER --
+     *  Sets the value of the 'email' field.
+     *
+     @return The value of the 'email' field.
+      * @param value the value to set.
+     */
+    private java.lang.CharSequence email;
+    /**
+     * -- GETTER --
+     *  Gets the value of the 'firstName' field.
+     *
+     *
+     * -- SETTER --
+     *  Sets the value of the 'firstName' field.
+     *
+     @return The value of the 'firstName' field.
+      * @param value the value to set.
+     */
+    private java.lang.CharSequence firstName;
+    /**
+     * -- GETTER --
+     *  Gets the value of the 'lastName' field.
+     *
+     *
+     * -- SETTER --
+     *  Sets the value of the 'lastName' field.
+     *
+     @return The value of the 'lastName' field.
+      * @param value the value to set.
+     */
+    private java.lang.CharSequence lastName;
 
   /**
    * Default constructor.  Note that this does not initialize fields
@@ -129,75 +180,8 @@ public class OrderPlacedEvent extends org.apache.avro.specific.SpecificRecordBas
     }
   }
 
-  /**
-   * Gets the value of the 'orderNumber' field.
-   * @return The value of the 'orderNumber' field.
-   */
-  public java.lang.CharSequence getOrderNumber() {
-    return orderNumber;
-  }
 
-
-  /**
-   * Sets the value of the 'orderNumber' field.
-   * @param value the value to set.
-   */
-  public void setOrderNumber(java.lang.CharSequence value) {
-    this.orderNumber = value;
-  }
-
-  /**
-   * Gets the value of the 'email' field.
-   * @return The value of the 'email' field.
-   */
-  public java.lang.CharSequence getEmail() {
-    return email;
-  }
-
-
-  /**
-   * Sets the value of the 'email' field.
-   * @param value the value to set.
-   */
-  public void setEmail(java.lang.CharSequence value) {
-    this.email = value;
-  }
-
-  /**
-   * Gets the value of the 'firstName' field.
-   * @return The value of the 'firstName' field.
-   */
-  public java.lang.CharSequence getFirstName() {
-    return firstName;
-  }
-
-
-  /**
-   * Sets the value of the 'firstName' field.
-   * @param value the value to set.
-   */
-  public void setFirstName(java.lang.CharSequence value) {
-    this.firstName = value;
-  }
-
-  /**
-   * Gets the value of the 'lastName' field.
-   * @return The value of the 'lastName' field.
-   */
-  public java.lang.CharSequence getLastName() {
-    return lastName;
-  }
-
-
-  /**
-   * Sets the value of the 'lastName' field.
-   * @param value the value to set.
-   */
-  public void setLastName(java.lang.CharSequence value) {
-    this.lastName = value;
-  }
-
-  /**
+    /**
    * Creates a new OrderPlacedEvent RecordBuilder.
    * @return A new OrderPlacedEvent RecordBuilder
    */
