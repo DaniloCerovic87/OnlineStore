@@ -1,4 +1,4 @@
-CREATE TABLE t_orders
+ CREATE TABLE t_orders
 (
     id           bigint(20) NOT NULL AUTO_INCREMENT,
     order_number varchar(255) DEFAULT NULL,

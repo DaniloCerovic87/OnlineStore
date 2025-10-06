@@ -1,16 +1,20 @@
 package com.order.orderservice.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.order.orderservice.client.InventoryClient;
 import com.order.orderservice.dto.CreateOrderRequest;
 import com.order.orderservice.dto.CreateOrderResponse;
 import com.order.orderservice.event.OrderPlacedEvent;
+import com.order.orderservice.event.OutboxEvent;
 import com.order.orderservice.exception.OutOfStockException;
 import com.order.orderservice.model.Order;
 import com.order.orderservice.repository.OrderRepository;
+import com.order.orderservice.repository.OutboxEventRepository;
+import com.order.orderservice.util.AvroJsonUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -21,10 +25,11 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
 
+    private final OutboxEventRepository outboxEventRepository;
+
     private final InventoryClient inventoryClient;
 
-    private final KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate;
-
+    @Transactional
     public CreateOrderResponse placeOrder(CreateOrderRequest request) {
         var isProductInStock = inventoryClient.isInStock(request.skuCode(), request.quantity());
 
@@ -42,17 +47,19 @@ public class OrderService {
         order.setQuantity(request.quantity());
         orderRepository.save(order);
 
-        // Send the message to Kafka Topic
-        // TODO implement Transactional Outbox pattern
         OrderPlacedEvent orderPlacedEvent = new OrderPlacedEvent();
         orderPlacedEvent.setOrderNumber(order.getOrderNumber());
         orderPlacedEvent.setEmail(request.userDetails().email());
         orderPlacedEvent.setFirstName(request.userDetails().firstName());
         orderPlacedEvent.setLastName(request.userDetails().lastName());
-        log.info("Start - Sending OrderPlacedEvent {} to Kafka topic order-placed", orderPlacedEvent);
-        kafkaTemplate.send("order-placed", orderPlacedEvent);
-        log.info("End - Sending OrderPlacedEvent {} to Kafka topic order-placed", orderPlacedEvent);
 
+        OutboxEvent evt = new OutboxEvent();
+        evt.setAggregateType("order");
+        evt.setAggregateId(order.getOrderNumber());
+        evt.setEventType("OrderPlaced");
+
+        evt.setPayload(AvroJsonUtil.toJson(orderPlacedEvent));
+        outboxEventRepository.save(evt);
         return new CreateOrderResponse(order.getId(), order.getOrderNumber(), order.getSkuCode(), order.getPrice(), order.getQuantity());
     }
 
