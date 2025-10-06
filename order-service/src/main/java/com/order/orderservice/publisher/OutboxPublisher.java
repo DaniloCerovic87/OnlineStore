@@ -1,6 +1,5 @@
 package com.order.orderservice.publisher;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.order.orderservice.event.OrderPlacedEvent;
 import com.order.orderservice.event.OutboxEvent;
 import com.order.orderservice.repository.OutboxEventRepository;
