@@ -3,6 +3,7 @@ package com.product.productservice.service;
 
 import com.product.productservice.dto.CreateProductRequest;
 import com.product.productservice.dto.CreateProductResponse;
+import com.product.productservice.exception.ResourceNotFoundException;
 import com.product.productservice.model.Product;
 import com.product.productservice.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,4 +38,10 @@ public class ProductService {
                 .toList();
     }
 
+    public void deleteProduct(String id) {
+        if (!productRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Product not found for id: " + id);
+        }
+        productRepository.deleteById(id);
+    }
 }
