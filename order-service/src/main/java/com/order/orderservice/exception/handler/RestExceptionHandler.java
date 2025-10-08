@@ -18,7 +18,7 @@ import static org.springframework.http.HttpStatus.*;
 public class RestExceptionHandler {
 
     @ExceptionHandler(OutOfStockException.class)
-    public ResponseEntity<Object> handleValidationException(OutOfStockException ex) {
+    public ResponseEntity<ApiError> handleValidationException(OutOfStockException ex) {
         log.warn("Malformed request: {}", ex.getMessage(), ex);
         ApiError apiError = ApiError.builder()
                 .status(BAD_REQUEST.value())
@@ -28,7 +28,7 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleGeneralException(Exception ex) {
+    public ResponseEntity<ApiError> handleGeneralException(Exception ex) {
         log.error("Unexpected server error: {}", ex.getMessage(), ex);
         ApiError apiError = ApiError.builder()
                 .status(INTERNAL_SERVER_ERROR.value())
@@ -37,7 +37,7 @@ public class RestExceptionHandler {
         return buildResponseEntity(apiError);
     }
 
-    private ResponseEntity<Object> buildResponseEntity(ApiError apiError) {
+    private ResponseEntity<ApiError> buildResponseEntity(ApiError apiError) {
         return ResponseEntity.status(apiError.getStatus()).body(apiError);
     }
 
