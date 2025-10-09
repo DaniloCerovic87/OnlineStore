@@ -1,12 +1,11 @@
 package com.order.orderservice.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.order.orderservice.client.InventoryClient;
 import com.order.orderservice.dto.CreateOrderRequest;
 import com.order.orderservice.dto.CreateOrderResponse;
+import com.order.orderservice.dto.ReserveRequest;
 import com.order.orderservice.event.OrderPlacedEvent;
 import com.order.orderservice.event.OutboxEvent;
-import com.order.orderservice.exception.OutOfStockException;
 import com.order.orderservice.model.Order;
 import com.order.orderservice.repository.OrderRepository;
 import com.order.orderservice.repository.OutboxEventRepository;
@@ -31,21 +30,14 @@ public class OrderService {
 
     @Transactional
     public CreateOrderResponse placeOrder(CreateOrderRequest request) {
-        var isProductInStock = inventoryClient.isInStock(request.skuCode(), request.quantity());
-
-        if (!isProductInStock) {
-            throw new OutOfStockException(
-                    "Product with SkuCode %s is not in stock (requested amount=%d)"
-                            .formatted(request.skuCode(), request.quantity())
-            );
-        }
-
         Order order = new Order();
         order.setOrderNumber(UUID.randomUUID().toString());
         order.setPrice(request.price());
         order.setSkuCode(request.skuCode());
         order.setQuantity(request.quantity());
         orderRepository.save(order);
+
+        inventoryClient.reserve(new ReserveRequest(request.skuCode(), request.quantity(), order.getOrderNumber()));
 
         OrderPlacedEvent orderPlacedEvent = new OrderPlacedEvent();
         orderPlacedEvent.setOrderNumber(order.getOrderNumber());

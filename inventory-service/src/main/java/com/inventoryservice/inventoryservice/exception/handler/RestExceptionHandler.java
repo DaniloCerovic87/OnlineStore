@@ -1,7 +1,10 @@
-package com.order.orderservice.exception.handler;
+package com.inventoryservice.inventoryservice.exception.handler;
 
-import com.order.orderservice.exception.InventoryNotAvailableException;
-import com.order.orderservice.exception.response.ApiError;
+
+import com.inventoryservice.inventoryservice.exception.OutOfStockException;
+import com.inventoryservice.inventoryservice.exception.ResourceNotFoundException;
+import com.inventoryservice.inventoryservice.exception.error.ApiError;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -17,12 +20,22 @@ import static org.springframework.http.HttpStatus.*;
 @Slf4j
 public class RestExceptionHandler {
 
-    @ExceptionHandler(InventoryNotAvailableException.class)
-    public ResponseEntity<ApiError> handleInventoryNotAvailableException(InventoryNotAvailableException ex) {
-        log.warn("Inventory service unavailable: {}", ex.getMessage());
+    @ExceptionHandler(OutOfStockException.class)
+    public ResponseEntity<ApiError> handleValidationException(OutOfStockException ex) {
+        log.warn("Malformed request: {}", ex.getMessage(), ex);
         ApiError apiError = ApiError.builder()
-                .status(SERVICE_UNAVAILABLE.value())
-                .message("Inventory service temporarily unavailable. Please try again later.")
+                .status(BAD_REQUEST.value())
+                .message("Malformed request")
+                .debugMessage(ex.getMessage()).build();
+        return buildResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiError> handleValidationException(ResourceNotFoundException ex, HttpServletRequest request) {
+        log.warn("Resource not found at {}: {}", request.getRequestURI(), ex.getMessage());
+        ApiError apiError = ApiError.builder()
+                .status(NOT_FOUND.value())
+                .message("Resource not found")
                 .debugMessage(ex.getMessage()).build();
         return buildResponseEntity(apiError);
     }

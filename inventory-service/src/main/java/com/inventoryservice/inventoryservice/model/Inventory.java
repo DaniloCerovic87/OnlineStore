@@ -20,4 +20,7 @@ public class Inventory {
     private String skuCode;
     private Integer quantity;
 
+    @Version
+    private Long version;
+
 }

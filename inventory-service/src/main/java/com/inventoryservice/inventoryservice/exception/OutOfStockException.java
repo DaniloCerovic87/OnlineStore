@@ -1,4 +1,4 @@
-package com.order.orderservice.exception;
+package com.inventoryservice.inventoryservice.exception;
 
 public class OutOfStockException extends RuntimeException {
 

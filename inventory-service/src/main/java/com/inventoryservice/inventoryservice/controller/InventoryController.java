@@ -1,5 +1,6 @@
 package com.inventoryservice.inventoryservice.controller;
 
+import com.inventoryservice.inventoryservice.dto.ReserveRequest;
 import com.inventoryservice.inventoryservice.service.InventoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,9 +13,10 @@ public class InventoryController {
 
     private final InventoryService inventoryService;
 
-    @GetMapping
-    public ResponseEntity<Boolean> isInStock(@RequestParam String skuCode, @RequestParam Integer quantity) {
-        return ResponseEntity.ok().body(inventoryService.isInStock(skuCode, quantity));
+    @PostMapping("/reserve")
+    public ResponseEntity<Void> reserve(@RequestBody ReserveRequest request) {
+        inventoryService.reserve(request);
+        return ResponseEntity.ok().build();
     }
 
 }
