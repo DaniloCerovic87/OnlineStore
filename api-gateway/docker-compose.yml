@@ -1,17 +1,18 @@
 services:
   keycloak-mysql:
     image: mysql:8
-    volumes:
-      - mysql_data:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: keycloak
       MYSQL_USER: keycloak
       MYSQL_PASSWORD: password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: unless-stopped
 
   keycloak:
     image: quay.io/keycloak/keycloak:24.0.1
-    command: ["start-dev", "--import-realm"]
+    command: [ "start-dev", "--import-realm" ]
     environment:
       DB_VENDOR: MYSQL
       DB_ADDR: keycloak-mysql
@@ -20,48 +21,74 @@ services:
       DB_PASSWORD: password
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
-    ports: ["8181:8080"]
+    ports: [ "8181:8080" ]
     volumes:
       - ./docker/keycloak/realms/:/opt/keycloak/data/import/:ro
-    depends_on: [keycloak-mysql]
+    depends_on: [ keycloak-mysql ]
+    restart: unless-stopped
 
   loki:
-    image: grafana/loki:main
-    command: ['-config.file=/etc/loki/local-config.yaml']
+    build: ./docker/loki
+    image: local/loki:3.4.6
+    command: [ "-config.file=/etc/loki-config.yaml" ]
+    ports: [ "3100:3100" ]
     volumes:
       - loki_data:/loki
-    ports: ["3100:3100"]
+    healthcheck:
+      test: [ "CMD-SHELL", "wget -qO- http://localhost:3100/ready || exit 1" ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
 
   prometheus:
-    image: prom/prometheus:v2.46.0
+    build: ./docker/prometheus
+    image: local/prometheus:2.46.0
     command:
       - --enable-feature=exemplar-storage
       - --config.file=/etc/prometheus/prometheus.yml
+    ports: [ "9090:9090" ]
     volumes:
-      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
-    ports: ["9090:9090"]
+    healthcheck:
+      test: [ "CMD-SHELL", "wget -qO- http://localhost:9090/-/ready || exit 1" ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
 
   tempo:
-    image: grafana/tempo:2.2.2
-    command: ['-config.file=/etc/tempo.yaml']
-    volumes:
-      - ./docker/tempo/tempo.yml:/etc/tempo.yaml:ro
-      - tempo_data:/tmp/tempo
+    build: ./docker/tempo
+    image: local/tempo:2.2.2
+    command: [ "-config.file=/etc/tempo.yaml" ]
     ports:
-      - "3110:3100"
+      - "3200:3200"
       - "9411:9411"
+    volumes:
+      - tempo_data:/tmp/tempo
+    healthcheck:
+      test: [ "CMD-SHELL", "wget -qO- http://localhost:3200/ready || exit 1" ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
 
   grafana:
-    image: grafana/grafana:10.1.0
-    volumes:
-      - ./docker/grafana:/etc/grafana/provisioning/datasources:ro
-      - grafana_data:/var/lib/grafana
+    build: ./docker/grafana
+    image: local/grafana:10.1.0
     environment:
       GF_AUTH_ANONYMOUS_ENABLED: "true"
       GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
       GF_AUTH_DISABLE_LOGIN_FORM: "true"
-    ports: ["3000:3000"]
+      GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
+    ports: [ "3000:3000" ]
+    depends_on:
+      - loki
+      - prometheus
+      - tempo
+    volumes:
+      - grafana_data:/var/lib/grafana
+    restart: unless-stopped
 
 volumes:
   mysql_data:
