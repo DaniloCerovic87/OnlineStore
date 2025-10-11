@@ -9,7 +9,11 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
-
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
 springdoc:
   api-docs:
     path: /api-docs
