@@ -40,7 +40,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health, info, metrics, prometheus
+        include: health,info,metrics,prometheus,circuitbreakers,circuitbreakerevents
   endpoint:
     health:
       show-details: always
@@ -59,7 +59,7 @@ management:
 
 #Resilience4j Properties
 resilience4j:
-  circuit-breaker:
+  circuitbreaker:
     instances:
       inventory:
         register-health-indicator: true
@@ -75,7 +75,10 @@ resilience4j:
       default:
         timeout-duration: 3s
   retry:
-    configs:
-      default:
+    instances:
+      inventory:
         max-attempts: 3
         wait-duration: 2s
+        retry-exceptions:
+          - org.springframework.web.client.HttpServerErrorException
+          - java.io.IOException

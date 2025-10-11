@@ -1,11 +1,11 @@
 package com.order.orderservice.service;
 
-import com.order.orderservice.client.InventoryClient;
 import com.order.orderservice.dto.CreateOrderRequest;
 import com.order.orderservice.dto.CreateOrderResponse;
 import com.order.orderservice.dto.ReserveRequest;
 import com.order.orderservice.event.OrderPlacedEvent;
 import com.order.orderservice.event.OutboxEvent;
+import com.order.orderservice.gateway.InventoryGateway;
 import com.order.orderservice.model.Order;
 import com.order.orderservice.repository.OrderRepository;
 import com.order.orderservice.repository.OutboxEventRepository;
@@ -26,7 +26,7 @@ public class OrderService {
 
     private final OutboxEventRepository outboxEventRepository;
 
-    private final InventoryClient inventoryClient;
+    private final InventoryGateway inventoryGateway;
 
     @Transactional
     public CreateOrderResponse placeOrder(CreateOrderRequest request) {
@@ -37,7 +37,7 @@ public class OrderService {
         order.setQuantity(request.quantity());
         orderRepository.save(order);
 
-        inventoryClient.reserve(new ReserveRequest(request.skuCode(), request.quantity(), order.getOrderNumber()));
+        inventoryGateway.reserve(new ReserveRequest(request.skuCode(), request.quantity(), order.getOrderNumber()));
 
         OrderPlacedEvent orderPlacedEvent = new OrderPlacedEvent();
         orderPlacedEvent.setOrderNumber(order.getOrderNumber());

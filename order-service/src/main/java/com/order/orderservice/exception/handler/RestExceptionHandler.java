@@ -1,9 +1,12 @@
 package com.order.orderservice.exception.handler;
 
 import com.order.orderservice.exception.InventoryNotAvailableException;
+import com.order.orderservice.exception.ResourceNotFoundException;
+import com.order.orderservice.exception.ValidationException;
 import com.order.orderservice.exception.response.ApiError;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -24,6 +27,28 @@ public class RestExceptionHandler {
                 .status(SERVICE_UNAVAILABLE.value())
                 .message("Inventory service temporarily unavailable. Please try again later.")
                 .debugMessage(ex.getMessage()).build();
+        return buildResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ApiError> handleValidationException(ValidationException ex) {
+        log.info("Validation failed: {}", ex.getMessage());
+        ApiError apiError = ApiError.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .message("Validation failed")
+                .debugMessage(ex.getMessage())
+                .build();
+        return buildResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiError> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        log.info("Resource not found: {}", ex.getMessage());
+        ApiError apiError = ApiError.builder()
+                .status(HttpStatus.NOT_FOUND.value())
+                .message("Resource not found")
+                .debugMessage(ex.getMessage())
+                .build();
         return buildResponseEntity(apiError);
     }
 
