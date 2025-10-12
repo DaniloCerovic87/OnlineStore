@@ -1,5 +1,7 @@
 package com.order.orderservice.gateway;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.order.orderservice.client.InventoryClient;
 import com.order.orderservice.dto.ReserveRequest;
 import com.order.orderservice.exception.InventoryNotAvailableException;
@@ -21,7 +23,8 @@ public class InventoryGateway {
     @CircuitBreaker(
             name = "inventory",
             fallbackMethod = "reserveFallback"
-    )    @Retry(name = "inventory")
+    )
+    @Retry(name = "inventory")
     public void reserve(ReserveRequest request) {
         try {
             api.reserve(request);
@@ -48,6 +51,20 @@ public class InventoryGateway {
     }
 
     private String extractMessage(String body) {
-        return (body == null || body.isBlank()) ? "Request failed" : body;
+        if (body == null || body.isBlank()) {
+            return null;
+        }
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode n = objectMapper.readTree(body);
+            if (n.hasNonNull("debugMessage")) {
+                return n.get("debugMessage").asText();
+            }
+            if (n.hasNonNull("message")) {
+                return n.get("message").asText();
+            }
+        } catch (Exception ignore) {
+        }
+        return null;
     }
 }
