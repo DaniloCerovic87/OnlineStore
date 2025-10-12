@@ -1,6 +1,6 @@
 package com.order.orderservice;
 
-import com.order.orderservice.event.OrderPlacedEvent;
+import com.order.orderservice.event.kafka.OrderPlacedEvent;
 import com.order.orderservice.stubs.InventoryClientStub;
 import io.restassured.RestAssured;
 import org.hamcrest.Matchers;

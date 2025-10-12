@@ -1,7 +1,7 @@
 package com.order.orderservice.publisher;
 
-import com.order.orderservice.event.OrderPlacedEvent;
-import com.order.orderservice.event.OutboxEvent;
+import com.order.orderservice.event.kafka.OrderPlacedEvent;
+import com.order.orderservice.event.kafka.OutboxEvent;
 import com.order.orderservice.repository.OutboxEventRepository;
 import com.order.orderservice.util.AvroJsonUtil;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class OutboxPublisher {
     var batch = outboxEventRepository.findTop100ByStatusOrderByCreatedAtAsc((OutboxEvent.Status.NEW));
     for (var e : batch) {
       try {
-        OrderPlacedEvent placedEvent = AvroJsonUtil.fromJson(e.getPayload(), com.order.orderservice.event.OrderPlacedEvent.getClassSchema());
+        OrderPlacedEvent placedEvent = AvroJsonUtil.fromJson(e.getPayload(), OrderPlacedEvent.getClassSchema());
         kafkaTemplate.send(TOPIC, placedEvent).get();
 
         e.setStatus(OutboxEvent.Status.SENT);

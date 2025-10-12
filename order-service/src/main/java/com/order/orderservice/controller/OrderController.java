@@ -2,6 +2,7 @@ package com.order.orderservice.controller;
 
 import com.order.orderservice.dto.CreateOrderRequest;
 import com.order.orderservice.dto.CreateOrderResponse;
+import com.order.orderservice.dto.OrderStatusResponse;
 import com.order.orderservice.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,11 @@ public class OrderController {
                 .buildAndExpand(response.id())
                 .toUri();
         return ResponseEntity.created(location).body(response);
+    }
+
+    @GetMapping("/{orderNumber}/status")
+    public ResponseEntity<OrderStatusResponse> getOrderStatus(@PathVariable String orderNumber) {
+        return ResponseEntity.ok(orderService.getOrderStatus(orderNumber));
     }
 
 }

@@ -1,7 +1,7 @@
 {
   "type": "record",
   "name": "OrderPlacedEvent",
-  "namespace": "com.order.orderservice.event",
+  "namespace": "com.order.orderservice.event.kafka",
   "avro.java.string": "String",
   "fields": [
     { "name": "orderNumber", "type": "string" },

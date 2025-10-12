@@ -19,27 +19,6 @@ import static org.springframework.http.HttpStatus.*;
 @Slf4j
 public class RestExceptionHandler {
 
-    @ExceptionHandler(InventoryNotAvailableException.class)
-    public ResponseEntity<ApiError> handleInventoryNotAvailableException(InventoryNotAvailableException ex) {
-        log.warn("Inventory service unavailable: {}", ex.getMessage());
-        ApiError apiError = ApiError.builder()
-                .status(SERVICE_UNAVAILABLE.value())
-                .message("Inventory service temporarily unavailable. Please try again later.")
-                .debugMessage(ex.getMessage()).build();
-        return buildResponseEntity(apiError);
-    }
-
-    @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<ApiError> handleValidationException(ValidationException ex) {
-        log.info("Validation failed: {}", ex.getMessage());
-        ApiError apiError = ApiError.builder()
-                .status(BAD_REQUEST.value())
-                .message("Validation failed")
-                .debugMessage(ex.getMessage())
-                .build();
-        return buildResponseEntity(apiError);
-    }
-
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiError> handleResourceNotFoundException(ResourceNotFoundException ex) {
         log.info("Resource not found: {}", ex.getMessage());

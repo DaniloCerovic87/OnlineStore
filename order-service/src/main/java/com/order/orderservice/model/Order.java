@@ -23,5 +23,7 @@ public class Order {
     private String skuCode;
     private BigDecimal price;
     private Integer quantity;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
 
 }

@@ -1,6 +1,6 @@
 package com.order.orderservice.repository;
 
-import com.order.orderservice.event.OutboxEvent;
+import com.order.orderservice.event.kafka.OutboxEvent;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

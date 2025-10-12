@@ -1,4 +1,4 @@
-package com.order.orderservice.event;
+package com.order.orderservice.event.kafka;
 
 import jakarta.persistence.*;
 import lombok.Getter;
