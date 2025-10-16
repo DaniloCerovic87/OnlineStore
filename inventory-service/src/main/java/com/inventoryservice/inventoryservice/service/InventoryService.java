@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
 @Service
 @RequiredArgsConstructor
@@ -22,30 +22,36 @@ public class InventoryService {
 
     private final InventoryRepository inventoryRepository;
     private final ReservationKeyRepository reservationKeyRepository;
+    private final TransactionTemplate txTemplate;
 
-    @Transactional
     public void reserve(ReserveRequest request) {
         int attempts = 0;
         while (true) {
             try {
-                try {
-                    reservationKeyRepository.save(ReservationKey.builder().orderNumber(request.orderNumber()).build());
-                } catch (DataIntegrityViolationException e) {
-                    log.info("Duplicate reservation ignored for order {}", request.orderNumber());
-                    return;
-                }
+                txTemplate.executeWithoutResult(status -> {
+                    try {
+                        reservationKeyRepository.save(
+                                ReservationKey.builder().orderNumber(request.orderNumber()).build()
+                        );
+                    } catch (DataIntegrityViolationException dup) {
+                        log.info("Duplicate reservation ignored for order {}", request.orderNumber());
+                        return;
+                    }
 
-                Inventory inv = inventoryRepository.findBySkuCode(request.skuCode())
-                        .orElseThrow(() -> new ResourceNotFoundException("SKU not found: " + request.skuCode()));
-                if (inv.getQuantity() < request.quantity()) {
-                    throw new OutOfStockException("Insufficient stock for " + request.skuCode());
-                }
-                inv.setQuantity(inv.getQuantity() - request.quantity());
+                    Inventory inv = inventoryRepository.findBySkuCode(request.skuCode())
+                            .orElseThrow(() -> new ResourceNotFoundException(
+                                    "SKU not found: " + request.skuCode()));
+
+                    if (inv.getQuantity() < request.quantity()) {
+                        throw new OutOfStockException(
+                                "Insufficient stock for " + request.skuCode());
+                    }
+
+                    inv.setQuantity(inv.getQuantity() - request.quantity());
+                });
                 return;
-            } catch (OptimisticLockException | ObjectOptimisticLockingFailureException e) {
-                if (++attempts > 5) {
-                    throw e;
-                }
+            } catch (ObjectOptimisticLockingFailureException | OptimisticLockException e) {
+                if (++attempts >= 5) throw e;
                 backoff(attempts);
             }
         }
