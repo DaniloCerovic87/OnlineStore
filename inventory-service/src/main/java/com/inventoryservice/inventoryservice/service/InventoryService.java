@@ -51,6 +51,7 @@ public class InventoryService {
                 });
                 return;
             } catch (ObjectOptimisticLockingFailureException | OptimisticLockException e) {
+                log.warn("Optimistic conflict on reserve sku={}, attempt={}", request.skuCode(), attempts);
                 if (++attempts >= 5) throw e;
                 backoff(attempts);
             }
