@@ -1,3 +1,6 @@
+server:
+  port: 8082
+
 spring:
   application:
     name: inventory-service
@@ -9,6 +12,30 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+  kafka:
+    bootstrap-servers: localhost:9092
+    listener:
+      ack-mode: manual_immediate
+
+    producer:
+      retries: 5
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        acks: all
+        enable.idempotence: true
+        spring.json.add.type.headers: false
+
+    consumer:
+      group-id: inventory-service
+      enable-auto-commit: false
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.value.default.type: com.inventoryservice.inventoryservice.dto.InventoryImportEvent
+
 management:
   endpoints:
     web:
@@ -20,10 +47,11 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
 
-server:
-  port: 8082
-
 logging:
+  level:
+    org.apache.kafka: warn
+    org.springframework.kafka: info
+    com.inventoryservice: debug
   file:
     name: logs/order-service.log
   logback:
